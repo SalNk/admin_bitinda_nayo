@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Seller;
+use App\Models\DeliveryMan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,14 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'delivery_address' => fake()->address(),
+            'delivery_price' => fake()->randomFloat(2, 5, 50),
+            'item_price' => fake()->randomFloat(2, 10, 500),
+            'notes' => fake()->sentence(),
+            'description' => fake()->paragraph(),
+            'status' => fake()->randomElement(['new', 'processing', 'shipped', 'delivered', 'cancelled']),
+            'seller_id' => Seller::all()->random()->id,
+            'delivery_man_id' => DeliveryMan::all()->random()->id,
         ];
     }
 }

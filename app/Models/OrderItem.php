@@ -8,6 +8,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class OrderItem
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OrderItem extends Model
 {
+	use HasFactory;
 	protected $table = 'order_items';
 
 	protected $casts = [
