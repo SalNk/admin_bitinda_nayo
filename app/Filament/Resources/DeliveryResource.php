@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -16,8 +17,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class DeliveryResource extends Resource
 {
     protected static ?string $model = Delivery::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Livraisons';
+    protected static ?string $navigationIcon = 'carbon-delivery-parcel';
+    protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form
     {
@@ -31,7 +33,42 @@ class DeliveryResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('order.name')
+                    ->label('Livraison')
+                    ->searchable()
+                    ->sortable()
+                    ->limit(20),
+                TextColumn::make('delivery_man.user.name')
+                    ->label('Livreur')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('seller.user.name')
+                    ->label('Vendeur')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('order.status')
+                    ->label('Statut')
+                    ->formatStateUsing(function ($state) {
+                        $translations = [
+                            'new' => 'Nouvelle',
+                            'processing' => 'En cours',
+                            'shipped' => 'Expédiée',
+                            'delivered' => 'Livrée',
+                            'cancelled' => 'Annulée'
+                        ];
+                        return $translations[$state] ?? $state;
+                    })
+                    ->badge()
+                    ->color(fn(string $state) => match ($state) {
+                        'new' => 'info',
+                        'processing' => 'primary',
+                        'shipped' => 'success',
+                        'delivered' => 'success',
+                        'cancelled' => 'warning'
+                    }),
+                TextColumn::make('delivery_date')
+                    ->label('Date de livraison')
+                    ->date('D d-m-Y')
             ])
             ->filters([
                 //

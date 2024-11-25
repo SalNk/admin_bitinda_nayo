@@ -53,7 +53,10 @@ class Order extends Model
 		'description',
 		'status',
 		'seller_id',
-		'delivery_man_id'
+		'delivery_man_id',
+		'name',
+		'delivery_date',
+		'delivery_time',
 	];
 
 	public function delivery_man()

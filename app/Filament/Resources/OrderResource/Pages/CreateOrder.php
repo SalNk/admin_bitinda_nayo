@@ -9,6 +9,6 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateOrder extends CreateRecord
 {
     protected static string $resource = OrderResource::class;
-    protected ?string $heading = 'Ajouter un client';
+    protected ?string $heading = 'Ajouter un bitinda';
 
 }

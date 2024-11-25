@@ -9,6 +9,7 @@ use Filament\Resources\Pages\ListRecords;
 class ListSellers extends ListRecords
 {
     protected static string $resource = SellerResource::class;
+    protected ?string $heading = "Liste des vendeurs";
 
     protected function getHeaderActions(): array
     {

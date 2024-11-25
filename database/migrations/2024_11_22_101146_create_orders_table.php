@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->decimal('delivery_price', 8, 2);
             $table->decimal('item_price', 8, 2);
             $table->string('notes');
-            $table->string('description')->nullable();
+            $table->longText('description')->nullable();
             $table->enum('status', ['new', 'processing', 'shipped', 'delivered', 'cancelled'])->default('new');
             $table->foreignId('seller_id')->constrained('sellers')->cascadeOnDelete();
             $table->foreignId('delivery_man_id')->nullable()->constrained('delivery_men')->nullOnDelete();

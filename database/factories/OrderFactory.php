@@ -19,6 +19,9 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
+            'name' => fake()->name(),
+            'delivery_date' => fake()->date(),
+            'delivery_time' => fake()->time(),
             'delivery_address' => fake()->address(),
             'delivery_price' => fake()->randomFloat(2, 5, 50),
             'item_price' => fake()->randomFloat(2, 10, 500),
