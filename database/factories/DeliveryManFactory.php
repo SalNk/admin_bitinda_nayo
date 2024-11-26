@@ -18,7 +18,7 @@ class DeliveryManFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->state(['role' => 'delivery_person']),
+            'user_id' => User::factory()->state(['role' => 'delivery_man']),
             'is_available' => fake()->boolean(),
         ];
     }

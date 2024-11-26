@@ -9,8 +9,10 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Resources\Pages\Page;
+use Filament\Forms\Components\Radio;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,40 +25,83 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationGroup = 'User management';
+    protected static ?string $navigationGroup = 'Gestion d\'utilisateurs';
     protected static ?string $navigationLabel = 'Utilisateurs';
+    protected $relation;
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('email')
-                    ->label('Email address')
-                    ->required()
-                    ->maxLength(255),
-                Select::make('role')
-                    ->options([
-                        'admin' => 'Administrateur',
-                        'seller' => 'Vendeur',
-                        'delivery_person' => 'Livreur'
+                Section::make('Identité')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nom complet')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('email')
+                            ->label('Email address')
+                            ->label('Email')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('telephone')
+                            ->required()
+                            ->maxLength(20)
+                            ->label('Téléphone'),
+                        TextInput::make('address')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Adresse'),
+                    ]),
+                Section::make('Permissions')
+                    ->schema([
+                        Select::make('role')
+                            ->options([
+                                'admin' => 'Administrateur',
+                                'seller' => 'Vendeur',
+                                'delivery_man' => 'Livreur'
+                            ])
+                            ->default('delivery_man')
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(fn(callable $set) => $set('is_available', null)),
+                        Select::make('is_active')
+                            ->label('Active')
+                            ->options([
+                                1 => 'Actif',
+                                0 => 'Non actif',
+                            ])
+                            ->default(1),
+                    ]),
+                Section::make()
+                    // ->relationship('delivery_men')
+                    ->schema([
+                        Select::make('is_available')
+                            ->label('Disponibilité')
+                            ->options([
+                                1 => 'Disponible',
+                                0 => 'Indisponible',
+                            ])
+                            ->default(1)
+                            ->reactive()
+                    ]),
+                Section::make('Sécurité')
+                    ->schema([
+                        TextInput::make('password')
+                            ->password()
+                            ->required(fn(Page $livewire): bool => $livewire instanceof CreateRecord)
+                            ->minLength(8)
+                            ->same('password_confirmation')
+                            ->dehydrated(fn($state) => filled($state))
+                            ->dehydrateStateUsing(fn($state) => Hash::make($state)),
+                        TextInput::make('password_confirmation')
+                            ->label('Password confirmation')
+                            ->password()
+                            ->required(fn(Page $livewire): bool => $livewire instanceof CreateRecord)
+                            ->minLength(8)
+                            ->dehydrated(false)
                     ])
-                    ->required(),
-                TextInput::make('password')
-                    ->password()
-                    ->required(fn(Page $livewire): bool => $livewire instanceof CreateRecord)
-                    ->minLength(8)
-                    ->same('password_confirmation')
-                    ->dehydrated(fn($state) => filled($state))
-                    ->dehydrateStateUsing(fn($state) => Hash::make($state)),
-                TextInput::make('password_confirmation')
-                    ->label('Password confirmation')
-                    ->password()
-                    ->required(fn(Page $livewire): bool => $livewire instanceof CreateRecord)
-                    ->minLength(8)
-                    ->dehydrated(false)
             ]);
     }
 
@@ -74,7 +119,7 @@ class UserResource extends Resource
                         $translations = [
                             'admin' => "Administrateur",
                             'seller' => "Vendeur",
-                            'delivery_person' => "Livreur"
+                            'delivery_man' => "Livreur"
                         ];
 
                         return $translations[$state] ?? $state;

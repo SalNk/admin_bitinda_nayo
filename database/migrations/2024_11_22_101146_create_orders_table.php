@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('delivery_address');
-            $table->decimal('delivery_price', 8, 2);
-            $table->decimal('item_price', 8, 2);
+            $table->decimal('delivery_price');
+            $table->decimal('item_price');
             $table->string('notes');
             $table->longText('description')->nullable();
             $table->enum('status', ['new', 'processing', 'shipped', 'delivered', 'cancelled'])->default('new');

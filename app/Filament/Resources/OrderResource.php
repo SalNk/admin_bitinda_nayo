@@ -52,11 +52,19 @@ class OrderResource extends Resource
                 TextColumn::make('item_price')
                     ->label('Prix')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->summarize([
+                        Tables\Columns\Summarizers\Sum::make()
+                            ->money(),
+                    ]),
                 TextColumn::make('delivery_price')
                     ->label('Livraison')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->summarize([
+                        Tables\Columns\Summarizers\Sum::make()
+                            ->money(),
+                    ]),
                 TextColumn::make('delivery_date')
                     ->label('Date')
                     ->sortable()
