@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             SellerSeeder::class,
             DeliveryManSeeder::class,
             OrderSeeder::class,
-            OrderItemSeeder::class,
             DeliverySeeder::class,
         ]);
     }

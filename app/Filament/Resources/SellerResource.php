@@ -9,8 +9,11 @@ use App\Models\Seller;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\SellerResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -25,17 +28,49 @@ class SellerResource extends Resource
 
     protected function getTableQuery(): Builder
     {
-        return Seller::query()
-            ->whereHas('user', function (Builder $query) {
-                $query->where('is_active', 1);
-            });
+        return static::getModel()::where('user.is_active', 1);
     }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Section::make('Identité')
+                    ->relationship('user')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nom complet')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('email')
+                            ->label('Email')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('telephone')
+                            ->required()
+                            ->maxLength(20)
+                            ->label('Téléphone'),
+                        TextInput::make('address')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Adresse'),
+                        Select::make('role')
+                            ->visible(false)
+                            ->options([
+                                'admin' => 'Administrateur',
+                                'seller' => 'Vendeur',
+                                'delivery_man' => 'Livreur',
+                            ])
+                            ->default('seller')
+                    ]),
+                Section::make()
+                    ->schema([
+                        TextInput::make('shop_name')
+                            ->label('Nom de la boutique'),
+                        TextInput::make('shop_address')
+                            ->label('Adresse de la boutique'),
+                    ]),
             ]);
     }
 

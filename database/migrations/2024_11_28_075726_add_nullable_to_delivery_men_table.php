@@ -10,11 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['admin', 'seller', 'delivery_man'])->default('admin');
-            $table->boolean('is_active')->default(true);
-            $table->string('address')->nullable();
-            $table->string('telephone')->nullable();
+        Schema::table('delivery_men', function (Blueprint $table) {
+            $table
+                ->foreignId('user_id')
+                ->nullable()
+                ->change();
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('delivery_men', function (Blueprint $table) {
             //
         });
     }

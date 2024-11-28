@@ -41,7 +41,6 @@ class UserResource extends Resource
                             ->required()
                             ->maxLength(255),
                         TextInput::make('email')
-                            ->label('Email address')
                             ->label('Email')
                             ->required()
                             ->maxLength(255),
@@ -60,31 +59,33 @@ class UserResource extends Resource
                             ->options([
                                 'admin' => 'Administrateur',
                                 'seller' => 'Vendeur',
-                                'delivery_man' => 'Livreur'
+                                'delivery_man' => 'Livreur',
                             ])
                             ->default('delivery_man')
                             ->required()
                             ->reactive()
-                            ->afterStateUpdated(fn(callable $set) => $set('is_available', null)),
+                            ->afterStateUpdated(fn(callable $get) => $get('role')),
                         Select::make('is_active')
                             ->label('Active')
-                            ->options([
-                                1 => 'Actif',
-                                0 => 'Non actif',
-                            ])
+                            ->options([1 => 'Actif', 0 => 'Non actif'])
                             ->default(1),
                     ]),
                 Section::make()
-                    // ->relationship('delivery_men')
+                    ->visible(fn(callable $get) => $get('role') === 'seller')
+                    ->schema([
+                        TextInput::make('shop_name')
+                            ->label('Nom de la boutique'),
+                        TextInput::make('shop_address')
+                            ->label('Adresse de la boutique'),
+                    ]),
+                Section::make('Disponibilité du livreur')
+                    ->visible(fn(callable $get) => $get('role') === 'delivery_man')
                     ->schema([
                         Select::make('is_available')
                             ->label('Disponibilité')
-                            ->options([
-                                1 => 'Disponible',
-                                0 => 'Indisponible',
-                            ])
+                            ->options([1 => 'Disponible', 0 => 'Indisponible'])
                             ->default(1)
-                            ->reactive()
+                            ->reactive(),
                     ]),
                 Section::make('Sécurité')
                     ->schema([
@@ -96,14 +97,15 @@ class UserResource extends Resource
                             ->dehydrated(fn($state) => filled($state))
                             ->dehydrateStateUsing(fn($state) => Hash::make($state)),
                         TextInput::make('password_confirmation')
-                            ->label('Password confirmation')
+                            ->label('Confirmation du mot de passe')
                             ->password()
                             ->required(fn(Page $livewire): bool => $livewire instanceof CreateRecord)
                             ->minLength(8)
-                            ->dehydrated(false)
-                    ])
+                            ->dehydrated(false),
+                    ]),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {

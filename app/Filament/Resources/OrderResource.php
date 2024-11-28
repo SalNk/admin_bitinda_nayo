@@ -8,8 +8,17 @@ use App\Models\Order;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\TimePicker;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Actions\Action;
 use App\Filament\Resources\OrderResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\OrderResource\RelationManagers;
@@ -32,7 +41,53 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Section::make('Attribution')
+                    ->schema([
+                        Select::make('seller_id')
+                            ->label('Vendeur')
+                            ->relationship('seller.user', 'name')
+                            ->columnSpanFull(),
+                        Select::make('delivery_man_id')
+                            ->relationship('delivery_man.user', 'name')
+                            ->label('Livreur')
+                            ->columnSpanFull(),
+                    ]),
+                Section::make('Détail de la livraison')
+                    ->columns(2)
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Produit'),
+                        TextInput::make('item_price')
+                            ->label('Prix du produit')
+                            ->columnSpan(1)
+                            ->suffix('$'),
+                        TextInput::make('delivery_price')
+                            ->label('Frais de livraison')
+                            ->suffix('$'),
+                        TextInput::make('delivery_address')
+                            ->label('Adresse de livraison'),
+                        DatePicker::make('delivery_date')
+                            ->label('Date de la livraison'),
+                        TimePicker::make('delivery_time')
+                            ->label('Heure de la livraison'),
+                        Select::make('status')
+                            ->label('Statut')
+                            ->options([
+                                'new' => 'Nouvelle',
+                                'processing' => 'En cours',
+                                'delivered' => 'Livrée',
+                                'cancelled' => 'Annulée'
+                            ]),
+                    ]),
+                Section::make('Images')
+                    ->schema([
+                        FileUpload::make('images')
+                    ]),
+                Section::make()
+                    ->schema([
+                        Textarea::make('notes')
+                            ->columnSpanFull(),
+                    ])
             ]);
     }
 
@@ -84,7 +139,6 @@ class OrderResource extends Resource
                         $translations = [
                             'new' => 'Nouvelle',
                             'processing' => 'En cours',
-                            'shipped' => 'Expédiée',
                             'delivered' => 'Livrée',
                             'cancelled' => 'Annulée'
                         ];
@@ -94,7 +148,6 @@ class OrderResource extends Resource
                     ->color(fn(string $state) => match ($state) {
                         'new' => 'info',
                         'processing' => 'primary',
-                        'shipped' => 'warning',
                         'delivered' => 'success',
                         'cancelled' => 'danger'
                     }),

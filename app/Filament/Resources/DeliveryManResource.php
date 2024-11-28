@@ -8,10 +8,8 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\DeliveryMan;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,49 +28,43 @@ class DeliveryManResource extends Resource
     {
         return $form
             ->schema([
-                Section::make()
-                    ->columns(3)
+                Section::make('Identité')
+                    ->relationship('user')
+                    ->columns(2)
                     ->schema([
-                        Section::make()
-                            ->relationship('user')
-                            ->columnSpan(2)
-                            ->columns(2)
-                            ->schema([
-                                TextInput::make('name')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->label('Nom'),
-                                TextInput::make('email')
-                                    ->required()
-                                    ->unique()
-                                    ->email()
-                                    ->maxLength(255)
-                                    ->label('Email'),
-                                TextInput::make('telephone')
-                                    ->required()
-                                    ->maxLength(20)
-                                    ->label('Téléphone'),
-                                TextInput::make('address')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->label('Adresse'),
-                            ]),
-                        Section::make()
-                            ->columnSpan(1)
-                            ->schema([
-                                Radio::make('is_available')
-                                    ->label('Disponibilité')
-                                    ->inline()
-                                    ->options([
-                                        1 => 'Disponible',
-                                        0 => 'Indisponible',
-                                    ])
-                                    ->default(1),
-                                Select::make('role')
-                                    ->default('delivery_man')
-                                    ->visible(false)
+                        TextInput::make('name')
+                            ->label('Nom complet')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('email')
+                            ->label('Email')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('telephone')
+                            ->required()
+                            ->maxLength(20)
+                            ->label('Téléphone'),
+                        TextInput::make('address')
+                            ->required()
+                            ->maxLength(255)
+                            ->label('Adresse'),
+                        Select::make('role')
+                            ->visible(false)
+                            ->options([
+                                'admin' => 'Administrateur',
+                                'seller' => 'Vendeur',
+                                'delivery_man' => 'Livreur',
                             ])
-                    ])
+                            ->default('delivery_man')
+                    ]),
+                Section::make('Disponibilité du livreur')
+                    ->schema([
+                        Select::make('is_available')
+                            ->label('Disponibilité')
+                            ->options([1 => 'Disponible', 0 => 'Indisponible'])
+                            ->default(1)
+                            ->reactive(),
+                    ]),
             ]);
     }
 
@@ -132,6 +124,7 @@ class DeliveryManResource extends Resource
     {
         return [
             'index' => Pages\ListDeliveryMen::route('/'),
+            'create' => Pages\CreateDeliveryMan::route('/create'),
             'edit' => Pages\EditDeliveryMan::route('/{record}/edit'),
         ];
     }

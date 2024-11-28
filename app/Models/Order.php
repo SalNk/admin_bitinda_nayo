@@ -29,7 +29,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property DeliveryMan|null $delivery_man
  * @property Seller $seller
  * @property Collection|Delivery[] $deliveries
- * @property Collection|OrderItem[] $order_items
  *
  * @package App\Models
  */
@@ -72,10 +71,5 @@ class Order extends Model
 	public function deliveries()
 	{
 		return $this->hasMany(Delivery::class);
-	}
-
-	public function order_items()
-	{
-		return $this->hasMany(OrderItem::class);
 	}
 }

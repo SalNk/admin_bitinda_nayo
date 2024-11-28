@@ -20,13 +20,6 @@ class DeliveryFactory extends Factory
     public function definition(): array
     {
         return [
-            'status' => $this->faker->randomElement([
-                'new',
-                'processing',
-                'shipped',
-                'delivered',
-                'cancelled'
-            ]),
             'order_id' => Order::factory(),
             'seller_id' => Seller::factory(),
             'delivery_man_id' => DeliveryMan::all()->random()->id,

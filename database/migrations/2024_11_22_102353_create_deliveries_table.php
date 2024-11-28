@@ -12,7 +12,6 @@ return new class extends Migration {
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
-            $table->enum('status', ['new', 'processing', 'shipped', 'delivered', 'cancelled'])->default('new');
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
             $table->foreignId('seller_id')->constrained('sellers')->cascadeOnDelete();
             $table->foreignId('delivery_man_id')->nullable()->constrained('delivery_men')->nullOnDelete();

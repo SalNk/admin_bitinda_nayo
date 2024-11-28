@@ -69,4 +69,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Seller::class);
     }
+
+    protected static function booted()
+    {
+        static::saved(callback: function ($user) {
+            //
+        });
+    }
 }

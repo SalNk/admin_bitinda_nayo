@@ -52,7 +52,6 @@ class DeliveryResource extends Resource
                         $translations = [
                             'new' => 'Nouvelle',
                             'processing' => 'En cours',
-                            'shipped' => 'Expédiée',
                             'delivered' => 'Livrée',
                             'cancelled' => 'Annulée'
                         ];
@@ -62,7 +61,6 @@ class DeliveryResource extends Resource
                     ->color(fn(string $state) => match ($state) {
                         'new' => 'info',
                         'processing' => 'primary',
-                        'shipped' => 'success',
                         'delivered' => 'success',
                         'cancelled' => 'warning'
                     }),
