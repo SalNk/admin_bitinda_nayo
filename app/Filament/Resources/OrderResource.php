@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\OrderResource\Widgets\OrderOverview;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Order;
@@ -45,10 +46,10 @@ class OrderResource extends Resource
                     ->schema([
                         Select::make('seller_id')
                             ->label('Vendeur')
-                            ->relationship('seller.user', 'name')
+                            ->relationship('seller', 'id', fn($model) => $model->user->name)
                             ->columnSpanFull(),
                         Select::make('delivery_man_id')
-                            ->relationship('delivery_man.user', 'name')
+                            ->relationship('delivery_man', 'id')
                             ->label('Livreur')
                             ->columnSpanFull(),
                     ]),
@@ -178,6 +179,13 @@ class OrderResource extends Resource
             'index' => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            OrderOverview::class,
         ];
     }
 }
