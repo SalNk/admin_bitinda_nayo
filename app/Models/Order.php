@@ -7,7 +7,9 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -32,9 +34,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *
  * @package App\Models
  */
-class Order extends Model
+class Order extends Model implements HasMedia
 {
 	use HasFactory;
+	use InteractsWithMedia;
+
 	protected $table = 'orders';
 
 	protected $casts = [
@@ -77,12 +81,13 @@ class Order extends Model
 	protected static function booted()
 	{
 		static::saved(callback: function ($order) {
-			Delivery::create([
-				'order_id' => $order->id,
-				'seller_id' => $order->seller_id,
-				'delivery_man_id' => $order->delivery_man_id,
-				'delivery_date' => $order->delivery_date
-			]);
+			if ($order->status == "delivered" || $order->status == "cancelled")
+				Delivery::create([
+					'order_id' => $order->id,
+					'seller_id' => $order->seller_id,
+					'delivery_man_id' => $order->delivery_man_id,
+					'delivery_date' => $order->delivery_date
+				]);
 		});
 	}
 }

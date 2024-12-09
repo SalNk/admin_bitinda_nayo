@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\OrderResource\Widgets\OrderOverview;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Order;
@@ -23,6 +22,9 @@ use Filament\Forms\Components\Actions\Action;
 use App\Filament\Resources\OrderResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\OrderResource\RelationManagers;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use App\Filament\Resources\OrderResource\Widgets\OrderOverview;
 
 class OrderResource extends Resource
 {
@@ -82,8 +84,13 @@ class OrderResource extends Resource
                     ]),
                 Section::make('Images')
                     ->schema([
-                        FileUpload::make('images')
-                    ]),
+                        SpatieMediaLibraryFileUpload::make('media')
+                            ->collection('bitinda-images')
+                            ->multiple()
+                            ->maxFiles(2)
+                            ->hiddenLabel(),
+                    ])
+                    ->collapsible(),
                 Section::make()
                     ->schema([
                         Textarea::make('notes')
@@ -96,6 +103,9 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('bitinda-images')
+                    ->label('Images')
+                    ->collection('bitinda-images'),
                 TextColumn::make('seller.user.name')
                     ->label('Vendeur')
                     ->sortable()
@@ -108,11 +118,13 @@ class OrderResource extends Resource
                 TextColumn::make('item_price')
                     ->label('Prix')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->suffix(' Fc'),
                 TextColumn::make('delivery_price')
-                    ->label('Livraison')
+                    ->label('Frais de livraison')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->suffix(' Fc'),
                 TextColumn::make('delivery_date')
                     ->label('Date')
                     ->sortable()
