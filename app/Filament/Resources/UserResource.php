@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Widgets\UserOverview;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
@@ -10,17 +9,22 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Resources\Pages\Page;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Radio;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Resources\Pages\CreateRecord;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Filament\Resources\UserResource\Widgets\UserOverview;
 
 class UserResource extends Resource
 {
@@ -34,6 +38,11 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
+                Section::make()
+                    ->schema([
+                        FileUpload::make('avatar')
+                            ->image()
+                    ]),
                 Section::make('Identité')
                     ->columns(2)
                     ->schema([
@@ -112,6 +121,8 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('avatar')
+                    ->circular(),
                 TextColumn::make('name')->sortable()->searchable()
                     ->label('Nom'),
                 TextColumn::make('email')->sortable()->searchable()

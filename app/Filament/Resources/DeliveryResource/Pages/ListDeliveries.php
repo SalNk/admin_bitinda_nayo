@@ -15,7 +15,7 @@ class ListDeliveries extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            // Actions\CreateAction::make(),
         ];
     }
 
@@ -23,10 +23,8 @@ class ListDeliveries extends ListRecords
     {
         return [
             null => Tab::make('Toutes'),
-            'Nouvelles' => Tab::make()->query(fn($query) => $query->where('order.status', 'new')),
-            'En cours' => Tab::make()->query(fn($query) => $query->where('order.status', 'processing')),
-            'Livrées' => Tab::make()->query(fn($query) => $query->where('order.status', 'delivered')),
-            'Annulées' => Tab::make()->query(fn($query) => $query->where('order.status', 'cancelled')),
+            'Livrées' => Tab::make()->query(fn($query) => $query->whereRelation('order', 'status', 'delivered')),
+            'Annulées' => Tab::make()->query(fn($query) => $query->whereRelation('order', 'status', 'cancelled')),
         ];
     }
 }

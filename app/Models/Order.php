@@ -72,4 +72,17 @@ class Order extends Model
 	{
 		return $this->hasMany(Delivery::class);
 	}
+
+
+	protected static function booted()
+	{
+		static::saved(callback: function ($order) {
+			Delivery::create([
+				'order_id' => $order->id,
+				'seller_id' => $order->seller_id,
+				'delivery_man_id' => $order->delivery_man_id,
+				'delivery_date' => $order->delivery_date
+			]);
+		});
+	}
 }

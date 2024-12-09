@@ -14,10 +14,12 @@ use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\SellerResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\SellerResource\RelationManagers;
+use App\Filament\Resources\SellerResource\RelationManagers\OrdersRelationManager;
 
 class SellerResource extends Resource
 {
@@ -78,6 +80,9 @@ class SellerResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('user.avatar')
+                    ->label('Avatar')
+                    ->circular(),
                 TextColumn::make('user.name')
                     ->label('Nom complet')
                     ->searchable()
@@ -122,7 +127,7 @@ class SellerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            OrdersRelationManager::class
         ];
     }
 

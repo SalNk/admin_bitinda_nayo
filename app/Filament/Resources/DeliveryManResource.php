@@ -12,10 +12,12 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\ImageColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\DeliveryManResource\Pages;
 use App\Filament\Resources\DeliveryManResource\RelationManagers;
+use App\Filament\Resources\DeliveryManResource\RelationManagers\OrdersRelationManager;
 
 class DeliveryManResource extends Resource
 {
@@ -72,6 +74,9 @@ class DeliveryManResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('user.avatar')
+                    ->label('Avatar')
+                    ->circular(),
                 TextColumn::make('user.name')
                     ->label('Nom complet')
                     ->searchable()
@@ -105,6 +110,7 @@ class DeliveryManResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -116,7 +122,7 @@ class DeliveryManResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            OrdersRelationManager::class
         ];
     }
 
@@ -125,6 +131,7 @@ class DeliveryManResource extends Resource
         return [
             'index' => Pages\ListDeliveryMen::route('/'),
             'create' => Pages\CreateDeliveryMan::route('/create'),
+            'view' => Pages\ViewDeliveryMan::route('/{record}'),
             'edit' => Pages\EditDeliveryMan::route('/{record}/edit'),
         ];
     }

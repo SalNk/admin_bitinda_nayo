@@ -46,7 +46,7 @@ class OrderResource extends Resource
                     ->schema([
                         Select::make('seller_id')
                             ->label('Vendeur')
-                            ->relationship('seller', 'id', fn($model) => $model->user->name)
+                            ->relationship('seller', 'id')
                             ->columnSpanFull(),
                         Select::make('delivery_man_id')
                             ->relationship('delivery_man', 'id')
@@ -108,23 +108,16 @@ class OrderResource extends Resource
                 TextColumn::make('item_price')
                     ->label('Prix')
                     ->sortable()
-                    ->searchable()
-                    ->summarize([
-                        Tables\Columns\Summarizers\Sum::make()
-                            ->money(),
-                    ]),
+                    ->searchable(),
                 TextColumn::make('delivery_price')
                     ->label('Livraison')
                     ->sortable()
-                    ->searchable()
-                    ->summarize([
-                        Tables\Columns\Summarizers\Sum::make()
-                            ->money(),
-                    ]),
+                    ->searchable(),
                 TextColumn::make('delivery_date')
                     ->label('Date')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->date('D d M Y'),
                 TextColumn::make('delivery_time')
                     ->label('Heure')
                     ->sortable()
