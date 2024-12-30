@@ -84,18 +84,22 @@
 
             <div class="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
                 <div class="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
-                    <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Sign in to Celebration</h2>
-                    <p class="mt-2 text-base text-gray-600">Don’t have an account? <a
+                    <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Connexion</h2>
+                    <p class="mt-2 text-base text-gray-600">Vous n'avez pas un compte? <a
                             href="{{ route('user_register') }}" title=""
-                            class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Create
-                            a free account</a></p>
+                            class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Créer
+                            un compte</a></p>
 
-                    <form action="{{ route('login') }}" method="POST" class="mt-8">
+                    <form action="{{ route('user_login') }}" method="POST" class="mt-8">
                         @csrf
 
-                        @if (session()->has('error'))
-                            <p class="mt-2 text-sm text-red-600">{{ session()->get('error') }}</p>
-                        @endif
+                        @error('email')
+                            <p class="mt-2 text-sm text-red-600 mb-4">
+                                Les informations d'identification fournies ne correspondent pas à nos
+                                enregistrements
+                            </p>
+                        @enderror
+
                         <div class="space-y-5">
                             <div>
                                 <label for="email" class="text-base font-medium text-gray-900">Email address</label>
@@ -110,11 +114,6 @@
                                     <input type="email" name="email" id="email"
                                         placeholder="Enter email to get started"
                                         class="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600" />
-                                    @error('email')
-                                        <p class="mt-2 text-sm text-red-600">
-                                            {{ $message == 'auth.failed' && "Les informations d\'identification fournies ne correspondent pas à nos enregistrements" }}
-                                        </p>
-                                    @enderror
                                 </div>
                             </div>
 
@@ -124,9 +123,6 @@
                                     @error('password')
                                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                                     @enderror
-                                    <a href="#" title=""
-                                        class="text-sm font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">
-                                        Forgot password?</a>
                                 </div>
                                 <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -145,7 +141,7 @@
                             <div>
                                 <button type="submit"
                                     class="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80">
-                                    Log in
+                                    Se connecter
                                 </button>
                             </div>
                         </div>

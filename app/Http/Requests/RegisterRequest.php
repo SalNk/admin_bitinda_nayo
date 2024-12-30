@@ -26,7 +26,7 @@ class RegisterRequest extends FormRequest
             'email' => 'required|email|max:255',
             'address' => 'required|string|max:255',
             'telephone' => 'required|string|max:20',
-            'password' => 'required|min:8',
+            'password' => 'required|min:8|confirmed',  // Ajout de la règle "confirmed"
         ];
     }
 
@@ -52,6 +52,7 @@ class RegisterRequest extends FormRequest
             'telephone.max' => 'Le numéro de téléphone ne peut pas dépasser 20 caractères.',
             'password.required' => 'Le mot de passe est obligatoire.',
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
+            'password.confirmed' => 'Les mots de passe ne correspondent pas.',  // Message d'erreur pour la confirmation
         ];
     }
 }

@@ -88,7 +88,7 @@
                             href="{{ route('user_login') }}"
                             class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Connectez-vous</a>
                     </p>
-                    <form action="{{ route('register') }}" method="POST" class="mt-8">
+                    <form action="{{ route('user_register') }}" method="POST" class="mt-8">
                         @csrf
                         <!-- Message d'erreur -->
                         @if (session()->has('error'))
@@ -99,66 +99,116 @@
                             <!-- Nom -->
                             <div>
                                 <label for="name" class="text-base font-medium text-gray-900">Nom complet</label>
-                                <input type="text" name="name" id="name"
-                                    placeholder="Entrez votre nom complet" value="{{ old('name') }}"
-                                    class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <input type="text" name="name" id="name"
+                                        placeholder="Entrez votre nom complet" value="{{ old('name') }}"
+                                        class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                    @error('name')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Email -->
                             <div>
                                 <label for="email" class="text-base font-medium text-gray-900">Adresse email</label>
-                                <input type="email" name="email" id="email" placeholder="Entrez votre email"
-                                    value="{{ old('email') }}"
-                                    class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <input type="email" name="email" id="email" placeholder="Entrez votre email"
+                                        value="{{ old('email') }}"
+                                        class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                    @error('email')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Avatar -->
                             <div>
                                 <label for="avatar" class="text-base font-medium text-gray-900">Avatar</label>
-                                <input type="file" name="avatar" id="avatar"
-                                    class="block w-full py-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <input type="file" name="avatar" id="avatar"
+                                        class="block w-full py-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                </div>
                             </div>
 
                             <!-- Mot de passe -->
                             <div>
                                 <label for="password" class="text-base font-medium text-gray-900">Mot de passe</label>
-                                <input type="password" name="password" id="password"
-                                    placeholder="Entrez votre mot de passe"
-                                    class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <input type="password" name="password" id="password"
+                                        placeholder="Entrez votre mot de passe"
+                                        class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                    @error('password')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div>
+                                <label for="password_confirmation" class="text-base font-medium text-gray-900">Mot de
+                                    passe de confirmation</label>
+                                <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <input type="password" name="password_confirmation" id="password_confirmation"
+                                        placeholder="Entrez votre mot de passe"
+                                        class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                    @error('password_confirmation')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Adresse -->
                             <div>
                                 <label for="address" class="text-base font-medium text-gray-900">Adresse</label>
-                                <input type="text" name="address" id="address" placeholder="Entrez votre adresse"
-                                    value="{{ old('address') }}"
-                                    class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <input type="text" name="address" id="address"
+                                        placeholder="Entrez votre adresse" value="{{ old('address') }}"
+                                        class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                    @error('address')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Téléphone -->
                             <div>
                                 <label for="telephone" class="text-base font-medium text-gray-900">Téléphone</label>
-                                <input type="text" name="telephone" id="telephone"
-                                    placeholder="Entrez votre numéro de téléphone" value="{{ old('telephone') }}"
-                                    class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <input type="text" name="telephone" id="telephone"
+                                        placeholder="Entrez votre numéro de téléphone" value="{{ old('telephone') }}"
+                                        class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                    @error('telephone')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Nom du magasin -->
                             <div>
                                 <label for="shop_name" class="text-base font-medium text-gray-900">Nom du
                                     magasin</label>
-                                <input type="text" name="shop_name" id="shop_name"
-                                    placeholder="Entrez le nom de votre magasin" value="{{ old('shop_name') }}"
-                                    class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <input type="text" name="shop_name" id="shop_name"
+                                        placeholder="Entrez le nom de votre magasin" value="{{ old('shop_name') }}"
+                                        class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                    @error('shop_name')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Adresse du magasin -->
                             <div>
                                 <label for="shop_address" class="text-base font-medium text-gray-900">Adresse du
                                     magasin</label>
-                                <input type="text" name="shop_address" id="shop_address"
-                                    placeholder="Entrez l'adresse de votre magasin" value="{{ old('shop_address') }}"
-                                    class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                    <input type="text" name="shop_address" id="shop_address"
+                                        placeholder="Entrez l'adresse de votre magasin"
+                                        value="{{ old('shop_address') }}"
+                                        class="block w-full py-4 pl-3 pr-4 text-black placeholder-gray-500 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white" />
+                                    @error('shop_address')
+                                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
 
                             <!-- Soumettre -->
@@ -172,10 +222,9 @@
                     </form>
                 </div>
             </div>
+
         </div>
     </section>
-
-
 </body>
 
 </html>

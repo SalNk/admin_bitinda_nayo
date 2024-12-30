@@ -17,7 +17,7 @@ class AuthController extends Controller
     public function handleLogin(LoginRequest $loginRequest)
     {
         $credentials = $loginRequest->only(['email', 'password']);
-        // dd($credentials);
+        dd($credentials);
 
         if (Auth::attempt($credentials)) {
             return redirect()->intended('admin')->with('success', 'Connexion réussie.');
@@ -28,48 +28,43 @@ class AuthController extends Controller
 
     public function handleRegister(RegisterRequest $request)
     {
-        dd('111');
+        $credentials = $request->only(['email', 'password']);
 
-        // Valider les données de la requête (cela devrait être fait dans RegisterRequest)
-        $validatedData = $request->validated();
-
-        // Traitement de l'avatar si nécessaire (supposons que c'est un fichier)
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
-            $validatedData['avatar'] = $avatarPath;
+            $request['avatar'] = $avatarPath;
             dd('file');
         }
 
-
-        // Créer l'utilisateur
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'avatar' => $validatedData['avatar'] ?? null, // Si avatar n'est pas présent
-            'password' => Hash::make($validatedData['password']),
-            'role' => $validatedData['role'],
-            'is_active' => $validatedData['is_active'],
-            'address' => $validatedData['address'],
-            'telephone' => $validatedData['telephone'],
-        ]);
+        try {
+            $user = User::create([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'avatar' => $request['avatar'] ?? null,
+                'password' => Hash::make($request['password']),
+                'role' => 'seller',
+                'is_active' => true,
+                'address' => $request['address'],
+                'telephone' => $request['telephone'],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error creating user',
+                'error' => $e->getMessage()
+            ], 500);
+        }
 
         if ($user) {
-            dd('entrée');
-
             Seller::create([
                 'user_id' => $user->id,
-                'shop_name' => $validatedData['shop_name'],
-                'shop_address' => $validatedData['shop_address'],
+                'shop_name' => $request['shop_name'],
+                'shop_address' => $request['shop_address'],
             ]);
 
             Auth::login($user);
-
-            return redirect()->route('admin')->with('success', 'Inscription réussie et vous êtes maintenant connecté.');
+            return redirect('/admin');
         }
 
         return redirect()->back()->with('error', 'Données incorrectes');
-
-
-        return redirect()->back();
     }
 }
