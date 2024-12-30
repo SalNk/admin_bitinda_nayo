@@ -8,6 +8,7 @@ use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Colors\Color;
+use Filament\Pages\Auth\EditProfile;
 use Filament\Http\Middleware\Authenticate;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -27,7 +28,9 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(fn() => view('login'))
+            ->registration(fn() => view('register'))
+            ->profile()
             ->colors([
                 'primary' => Color::Blue,
             ])
